@@ -2,15 +2,15 @@ import React from "react";
 import "./Search.css";
 function Search({ searchInput, search }) {
   return (
-    <div>
+    <form className="search-form" onSubmit={search}>
       <input
-        type="text"
+        type="search"
         placeholder="Search for movie.."
         className="search"
         onChange={searchInput}
-        onKeyPress={search}
       />
-    </div>
+      <button type="submit">Search</button>
+    </form>
   );
 }
 

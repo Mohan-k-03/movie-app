@@ -4,6 +4,7 @@ import axios from "axios";
 import Detail from "./Detail.jsx";
 import "./App.css";
 function App() {
+  const [error, setError] = useState("");
   const [state, setState] = useState({
     s: "sherlock",
     results: [],
@@ -20,18 +21,29 @@ function App() {
   };
 
   const search = (e) => {
-    if (e.key === "Enter") {
-      axios(apiurl + "&s=" + state.s).then(({ data }) => {
-        let results = data.Search || [];
-        console.log(results);
-        setState((prevState) => {
-          return {
-            ...prevState,
-            results: results,
-          };
-        });
-      });
+    e.preventDefault();
+    const query = state.s.trim();
+
+    if (!query) {
+      setError("Enter a movie or show title.");
+      return;
     }
+
+    setError("");
+    axios(apiurl + "&s=" + encodeURIComponent(query))
+      .then(({ data }) => {
+        setState((prevState) => ({
+          ...prevState,
+          results: data.Search || [],
+        }));
+        if (data.Response === "False")
+          setError(data.Error || "No results found.");
+      })
+      .catch(() =>
+        setError(
+          "Could not reach movie search. Check your connection and try again.",
+        ),
+      );
   };
 
   const openDetail = (id) => {
@@ -58,12 +70,17 @@ function App() {
 
         <div className="container">
           {state.results.map((e) => (
-            <div className="item" onClick={() => openDetail(e.imdbID)}>
-              <img style={{ width: "200px" }} src={e.Poster} />
+            <div
+              className="item"
+              key={e.imdbID}
+              onClick={() => openDetail(e.imdbID)}
+            >
+              <img style={{ width: "200px" }} src={e.Poster} alt={e.Title} />
               <h3 style={{ color: "white" }}>{e.Title}</h3>
             </div>
           ))}
         </div>
+        {error && <p role="alert">{error}</p>}
 
         {typeof state.selected.Title != "undefined" ? (
           <Detail selected={state.selected} closeDetail={closeDetail} />

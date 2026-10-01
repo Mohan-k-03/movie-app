@@ -1,0 +1,25 @@
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem auto 2rem;
+}
+
+.search-form input {
+  width: min(28rem, 70vw);
+  padding: 0.75rem 1rem;
+  border: 1px solid #8da7c0;
+  border-radius: 4px;
+  font: inherit;
+}
+
+.search-form button {
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 4px;
+  background: #e4a84d;
+  color: #111;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
